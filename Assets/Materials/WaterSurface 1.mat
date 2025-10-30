@@ -89,7 +89,7 @@ Material:
     - _Parallax: 0.02
     - _ReflectionIntensity: 0.5
     - _ReflectionScaleX: 0.65
-    - _ReflectionScaleY: 1.8
+    - _ReflectionScaleY: 1.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1

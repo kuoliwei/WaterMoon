@@ -88,13 +88,13 @@ Material:
     - _OcclusionStrength: 1
     - _Parallax: 0.02
     - _ReflectionIntensity: 0.5
-    - _ReflectionScaleX: 0.6
-    - _ReflectionScaleY: 1.45
+    - _ReflectionScaleX: 0.65
+    - _ReflectionScaleY: 1
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _UVSec: 0
-    - _WaveAnimate: 0
+    - _WaveAnimate: 1
     - _WaveCountX: 4
     - _WaveCountY: 4
     - _WaveFrequencyX: 48.5
