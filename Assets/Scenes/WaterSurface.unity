@@ -222,8 +222,8 @@ Transform:
   m_GameObject: {fileID: 615799351}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 10.3, z: 25}
-  m_LocalScale: {x: 2, y: 1, z: 2}
+  m_LocalPosition: {x: 0, y: 13.6, z: 25}
+  m_LocalScale: {x: 3, y: 1, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -370,91 +370,91 @@ MonoBehaviour:
   waveCountX: 4
   waveCountY: 4
   waveFrequenciesX:
-  - 263.12036
-  - 140.90736
-  - 167.19244
-  - 199.61734
+  - 130.45563
+  - 303.7866
+  - 226.25728
+  - 160.65173
   - 15.826092
   - 15.826092
   - 15.826092
   - 15.826092
   waveSpeedsX:
-  - 0.4085441
-  - 0.24877012
-  - 0.56085324
-  - 0.24365
+  - 0.09633144
+  - 0.16578569
+  - 0.084166035
+  - 0.08236143
   - 1.222105
   - 1.222105
   - 1.222105
   - 1.222105
   waveStrengthsX:
-  - 0.0026385863
-  - 0.003655583
-  - 0.0014853782
-  - 0.0046422756
+  - 0.018190475
+  - 0.01675566
+  - 0.016097862
+  - 0.019793544
   - 0.04764852
   - 0.04764852
   - 0.04764852
   - 0.04764852
   ampVarSpeedsX:
-  - 0.1898962
-  - 0.33091646
-  - 0.55027866
-  - 0.5886658
+  - 0.23135877
+  - 0.154993
+  - 0.047877
+  - 0.13973212
   - 0.012493767
   - 0.012493767
   - 0.012493767
   - 0.012493767
   waveFrequenciesY:
-  - 72.093094
-  - 88.71935
-  - 127.623405
-  - 78.660286
+  - 73.45629
+  - 117.350395
+  - 113.11558
+  - 47.34857
   - 42.02206
   - 42.02206
   - 42.02206
   - 42.02206
   waveSpeedsY:
-  - 0.5721747
-  - 0.1771262
-  - 0.35686478
-  - 0.54922175
+  - 0.2691442
+  - 0.13510208
+  - 0.14817771
+  - 0.077840164
   - 1.218049
   - 1.218049
   - 1.218049
   - 1.218049
   waveStrengthsY:
-  - 0.0013209286
-  - 0.0029144716
-  - 0.004747
-  - 0.0048178486
+  - 0.008026848
+  - 0.009634132
+  - 0.0086878305
+  - 0.009865558
   - 0.09840919
   - 0.09840919
   - 0.09840919
   - 0.09840919
   ampVarSpeedsY:
-  - 0.16446382
-  - 0.34343436
-  - 0.42435375
-  - 0.144014
+  - 0.2006664
+  - 0.23022494
+  - 0.2588644
+  - 0.16986462
   - 0.019452654
   - 0.019452654
   - 0.019452654
   - 0.019452654
-  waveFrequenciesX_Min: 120
-  waveFrequenciesX_Max: 300
+  waveFrequenciesX_Min: 100
+  waveFrequenciesX_Max: 312.5
   waveSpeedsX_Min: 0.03
   waveSpeedsX_Max: 0.3
-  waveStrengthsX_Min: 0.001
-  waveStrengthsX_Max: 0.005
+  waveStrengthsX_Min: 0.016
+  waveStrengthsX_Max: 0.02
   ampVarSpeedsX_Min: 0.03
   ampVarSpeedsX_Max: 0.3
-  waveFrequenciesY_Min: 60
-  waveFrequenciesY_Max: 150
+  waveFrequenciesY_Min: 40
+  waveFrequenciesY_Max: 125
   waveSpeedsY_Min: 0.03
   waveSpeedsY_Max: 0.3
-  waveStrengthsY_Min: 0.001
-  waveStrengthsY_Max: 0.005
+  waveStrengthsY_Min: 0.008
+  waveStrengthsY_Max: 0.01
   ampVarSpeedsY_Min: 0.03
   ampVarSpeedsY_Max: 0.3
   enablePulse: 1
@@ -545,7 +545,7 @@ Transform:
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
   m_LocalRotation: {x: 0.0678412, y: 0, z: 0, w: 0.99769616}
-  m_LocalPosition: {x: 0, y: 22.52, z: -44.6}
+  m_LocalPosition: {x: 0, y: 23.79, z: -53.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -599,87 +599,87 @@ MonoBehaviour:
   waveCountX: 4
   waveCountY: 4
   waveFrequenciesX:
-  - 115.394196
-  - 135.11859
-  - 94.37568
-  - 113.288284
+  - 46.327507
+  - 63.82808
+  - 88.35986
+  - 90.156715
   - 15.826092
   - 15.826092
   - 15.826092
   - 15.826092
   waveSpeedsX:
-  - 0.10267423
-  - 0.06433784
-  - 0.40540773
-  - 0.38360247
+  - 0.41429064
+  - 0.19310147
+  - 0.2795471
+  - 0.15829264
   - 1.222105
   - 1.222105
   - 1.222105
   - 1.222105
   waveStrengthsX:
-  - 0.008047488
-  - 0.0053260117
-  - 0.008308474
-  - 0.0068564704
+  - 0.008446792
+  - 0.005222086
+  - 0.005036316
+  - 0.0051115896
   - 0.04764852
   - 0.04764852
   - 0.04764852
   - 0.04764852
   ampVarSpeedsX:
-  - 0.089430735
-  - 0.040739965
-  - 0.013057718
-  - 0.095635384
+  - 0.045703553
+  - 0.035895158
+  - 0.087090135
+  - 0.025374293
   - 0.012493767
   - 0.012493767
   - 0.012493767
   - 0.012493767
   waveFrequenciesY:
-  - 461.2028
-  - 490.14026
-  - 410.7641
-  - 449.63013
+  - 172.25983
+  - 267.87973
+  - 204.5204
+  - 247.69196
   - 42.02206
   - 42.02206
   - 42.02206
   - 42.02206
   waveSpeedsY:
-  - 0.49064192
-  - 0.1978497
-  - 0.54090613
-  - 0.37696704
+  - 0.49825493
+  - 0.4408502
+  - 0.5278681
+  - 0.20148239
   - 1.218049
   - 1.218049
   - 1.218049
   - 1.218049
   waveStrengthsY:
-  - 0.0059385975
-  - 0.0068195257
-  - 0.008396838
-  - 0.007331338
+  - 0.00771086
+  - 0.0059917066
+  - 0.006094287
+  - 0.008543492
   - 0.09840919
   - 0.09840919
   - 0.09840919
   - 0.09840919
   ampVarSpeedsY:
-  - 0.09577838
-  - 0.06578593
-  - 0.08488874
-  - 0.078988284
+  - 0.028042406
+  - 0.034139447
+  - 0.07464746
+  - 0.018646993
   - 0.019452654
   - 0.019452654
   - 0.019452654
   - 0.019452654
-  waveFrequenciesX_Min: 83.333336
-  waveFrequenciesX_Max: 186.6667
+  waveFrequenciesX_Min: 41.66667
+  waveFrequenciesX_Max: 93.33335
   waveSpeedsX_Min: 0.06
   waveSpeedsX_Max: 0.6
   waveStrengthsX_Min: 0.005
   waveStrengthsX_Max: 0.01
   ampVarSpeedsX_Min: 0.01
   ampVarSpeedsX_Max: 0.1
-  waveFrequenciesY_Min: 250
-  waveFrequenciesY_Max: 560
+  waveFrequenciesY_Min: 125
+  waveFrequenciesY_Max: 280
   waveSpeedsY_Min: 0.06
   waveSpeedsY_Max: 0.6
   waveStrengthsY_Min: 0.005
@@ -765,7 +765,7 @@ Transform:
   m_GameObject: {fileID: 1100299953}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 10.3, z: 10}
+  m_LocalPosition: {x: 0, y: 15.2, z: 10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -961,87 +961,87 @@ MonoBehaviour:
   waveCountX: 4
   waveCountY: 4
   waveFrequenciesX:
-  - 444.15524
-  - 291.7363
-  - 588.37537
-  - 241.47128
+  - 183.04562
+  - 208.73921
+  - 278.15744
+  - 227.4715
   - 15.826092
   - 15.826092
   - 15.826092
   - 15.826092
   waveSpeedsX:
-  - 0.42211702
-  - 0.23827879
-  - 0.27867988
-  - 0.13245866
+  - 0.14712544
+  - 0.2229635
+  - 0.2511138
+  - 0.03906858
   - 1.222105
   - 1.222105
   - 1.222105
   - 1.222105
   waveStrengthsX:
-  - 0.018581226
-  - 0.016327048
-  - 0.018155545
-  - 0.019782582
+  - 0.016651755
+  - 0.018769398
+  - 0.016823929
+  - 0.016111292
   - 0.04764852
   - 0.04764852
   - 0.04764852
   - 0.04764852
   ampVarSpeedsX:
-  - 0.5704339
-  - 0.40422094
-  - 0.5838099
-  - 0.21789965
+  - 0.04539188
+  - 0.06525472
+  - 0.0588984
+  - 0.2550323
   - 0.012493767
   - 0.012493767
   - 0.012493767
   - 0.012493767
   waveFrequenciesY:
-  - 220.22273
-  - 169.52019
-  - 84.624115
-  - 112.29583
+  - 79.368004
+  - 100.32006
+  - 78.543015
+  - 79.39409
   - 42.02206
   - 42.02206
   - 42.02206
   - 42.02206
   waveSpeedsY:
-  - 0.45855498
-  - 0.17243539
-  - 0.31121483
-  - 0.59020406
+  - 0.28601497
+  - 0.25858802
+  - 0.13686197
+  - 0.18449484
   - 1.218049
   - 1.218049
   - 1.218049
   - 1.218049
   waveStrengthsY:
-  - 0.008204238
-  - 0.008514655
-  - 0.009875518
-  - 0.0081231985
+  - 0.009667056
+  - 0.00909688
+  - 0.009524751
+  - 0.008411167
   - 0.09840919
   - 0.09840919
   - 0.09840919
   - 0.09840919
   ampVarSpeedsY:
-  - 0.29018027
-  - 0.48122948
-  - 0.26022324
-  - 0.121867165
+  - 0.12520404
+  - 0.21406342
+  - 0.05710172
+  - 0.03608808
   - 0.019452654
   - 0.019452654
   - 0.019452654
   - 0.019452654
-  waveFrequenciesX_Min: 200
-  waveFrequenciesX_Max: 625
+  waveFrequenciesX_Min: 100
+  waveFrequenciesX_Max: 312.5
   waveSpeedsX_Min: 0.03
   waveSpeedsX_Max: 0.3
   waveStrengthsX_Min: 0.016
   waveStrengthsX_Max: 0.02
   ampVarSpeedsX_Min: 0.03
   ampVarSpeedsX_Max: 0.3
-  waveFrequenciesY_Min: 80
-  waveFrequenciesY_Max: 250
+  waveFrequenciesY_Min: 40
+  waveFrequenciesY_Max: 125
   waveSpeedsY_Min: 0.03
   waveSpeedsY_Max: 0.3
   waveStrengthsY_Min: 0.008
@@ -1062,6 +1062,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Star
       objectReference: {fileID: 0}
+    - target: {fileID: 7756087015411954190, guid: b8ab4e04c5cad6e4b8d8b92adbbd077b, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 8948404883409297511, guid: b8ab4e04c5cad6e4b8d8b92adbbd077b, type: 3}
       propertyPath: m_LocalScale.x
       value: 15
@@ -1072,11 +1076,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8948404883409297511, guid: b8ab4e04c5cad6e4b8d8b92adbbd077b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 22.8
+      value: 33.1
       objectReference: {fileID: 0}
     - target: {fileID: 8948404883409297511, guid: b8ab4e04c5cad6e4b8d8b92adbbd077b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 12.6
+      value: 25.1
       objectReference: {fileID: 0}
     - target: {fileID: 8948404883409297511, guid: b8ab4e04c5cad6e4b8d8b92adbbd077b, type: 3}
       propertyPath: m_LocalPosition.z
