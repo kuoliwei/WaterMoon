@@ -1,9 +1,8 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEngine.UI.Image;
+using UnityEngine.UI;
 
-[RequireComponent(typeof(Renderer))]
+[RequireComponent(typeof(Graphic))]
 public class StarController : MonoBehaviour
 {
     private Material mat;
@@ -39,61 +38,59 @@ public class StarController : MonoBehaviour
     public float crossBaseIntensity = 0.05f;
     public float glowSineFrequency = 1f;
     public float crossSineFrequency = 2f;
+
     void Start()
     {
-        mat = GetComponent<Renderer>().material;
-        //coroutine = StartCoroutine(AlwaysFlash());
-    }
+        // 唯一改動：從 Graphic 而非 Renderer 取得材質
+        var graphic = GetComponent<Graphic>();
+        mat = Instantiate(graphic.material);
+        graphic.material = mat;
 
-    void Update()
-    {
-        //if (Input.GetKeyDown(KeyCode.B))
-        //{
-        //    FlashCross(5, 0.1f);
-        //}
-        UpdateGlowBySine();
-        UpdateCrossBySine();
-    }
-    private void SetAllParameter()
-    {
-        // 實時更新 shader 參數
-        mat.SetFloat(GlowIntensityID, glowIntensity);
-        mat.SetFloat(CrossIntensityID, crossIntensity);
-
-        mat.SetFloat(GlowScaleXID, glowScaleX);
-        mat.SetFloat(GlowScaleYID, glowScaleY);
-        mat.SetFloat(CrossScaleXID, crossScaleX);
-        mat.SetFloat(CrossScaleYID, crossScaleY);
-
+        // 初始化 shader 顏色
         mat.SetColor(BaseColorID, glowColor);
         mat.SetColor(CrossColorID, crossColor);
     }
 
-    private IEnumerator AlwaysFlash()
+    void Update()
     {
-        while (true)
-        {
-            FlashCross(5, 0.1f);
-            yield return new WaitForSeconds(1);
-            FlashCross(5, 0.1f);
-            yield return new WaitForSeconds(0.2f);
-            FlashCross(5, 0.1f);
-            yield return new WaitForSeconds(1);
-        }
+        UpdateGlowBySine();
+        UpdateCrossBySine();
     }
-    // ------------------------------------------------------
-    // 光暈閃爍（可作為 idle 呼吸效果）
-    // ------------------------------------------------------
+
+    private void SetAllParameter()
+    {
+        mat.SetFloat(GlowIntensityID, glowIntensity);
+        mat.SetFloat(CrossIntensityID, crossIntensity);
+        mat.SetFloat(GlowScaleXID, glowScaleX);
+        mat.SetFloat(GlowScaleYID, glowScaleY);
+        mat.SetFloat(CrossScaleXID, crossScaleX);
+        mat.SetFloat(CrossScaleYID, crossScaleY);
+        mat.SetColor(BaseColorID, glowColor);
+        mat.SetColor(CrossColorID, crossColor);
+    }
+    // 新增：讓外部可指定顏色（Spawner 會呼叫）
+    public void SetColors(Color baseColor, Color crossColor)
+    {
+        glowColor = baseColor;
+        this.crossColor = crossColor;
+        if (mat == null)
+        {
+            var graphic = GetComponent<UnityEngine.UI.Graphic>();
+            mat = Instantiate(graphic.material);
+            graphic.material = mat;
+        }
+        mat.SetColor(BaseColorID, glowColor);
+        mat.SetColor(CrossColorID, crossColor);
+    }
     public void FlashGlow(float peak = 3f, float duration = 0.5f)
     {
         StartCoroutine(FlashGlowRoutine(peak, duration));
     }
 
-    private System.Collections.IEnumerator FlashGlowRoutine(float peak, float duration)
+    private IEnumerator FlashGlowRoutine(float peak, float duration)
     {
         float timer = 0f;
         float original = glowIntensity;
-
         while (timer < duration)
         {
             timer += Time.deltaTime;
@@ -101,23 +98,18 @@ public class StarController : MonoBehaviour
             mat.SetFloat(GlowIntensityID, Mathf.Lerp(original, peak, t));
             yield return null;
         }
-
         mat.SetFloat(GlowIntensityID, original);
     }
 
-    // ------------------------------------------------------
-    // 十字星芒閃爍（可作為命中效果）
-    // ------------------------------------------------------
     public void FlashCross(float peak = 3f, float duration = 0.3f)
     {
         StartCoroutine(FlashCrossRoutine(peak, duration));
     }
 
-    private System.Collections.IEnumerator FlashCrossRoutine(float peak, float duration)
+    private IEnumerator FlashCrossRoutine(float peak, float duration)
     {
         float timer = 0f;
         float original = crossIntensity;
-
         while (timer < duration)
         {
             timer += Time.deltaTime;
@@ -125,9 +117,9 @@ public class StarController : MonoBehaviour
             mat.SetFloat(CrossIntensityID, Mathf.Lerp(original, peak, t));
             yield return null;
         }
-
         mat.SetFloat(CrossIntensityID, original);
     }
+
     private void UpdateGlowBySine()
     {
         float sineValue = Mathf.Sin(2f * Mathf.PI * glowSineFrequency * Time.time);
