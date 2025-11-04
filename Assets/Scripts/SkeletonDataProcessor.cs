@@ -53,6 +53,11 @@ public class SkeletonDataProcessor : MonoBehaviour
     [Header("鼻子射線事件")]
     public NoseHitEvent OnNoseHitProcessed = new();
 
+    [System.Serializable]
+    public class HandHitEvent : UnityEvent<List<Vector2>> { }
+
+    [Header("手部射線事件")]
+    public HandHitEvent OnHandHitProcessed = new();
     class SkeletonVisual
     {
         public int personId;
@@ -63,6 +68,17 @@ public class SkeletonDataProcessor : MonoBehaviour
 
     private readonly Dictionary<int, SkeletonVisual> visuals = new Dictionary<int, SkeletonVisual>();
     private readonly List<int> _tmpToRemove = new List<int>();
+
+    [SerializeField] Vector2[] startPositions;
+
+    private void Update()
+    {
+        // 測試：按 S 鍵生成一顆星星
+        if (Input.GetKey(KeyCode.S))
+        {
+            OnNoseHitProcessed?.Invoke(startPositions.ToList<Vector2>());
+        }
+    }
 
     public void HandleSkeletonFrame(FrameSample frame)
     {
@@ -106,21 +122,27 @@ public class SkeletonDataProcessor : MonoBehaviour
             }
             // [新增] 鼻子射線：固定往 Z+ 射出
             Transform nose = vis.joints[(int)JointId.Nose];
+            //Debug.Log($"nose存在{nose}");
             if (nose != null)
             {
-                Vector3 dir = skeletonParent != null
-                    ? skeletonParent.TransformDirection(Vector3.forward)
-                    : Vector3.forward;
+                //Vector3 dir = skeletonParent != null
+                //    ? skeletonParent.TransformDirection(Vector3.forward)
+                //    : Vector3.forward;
 
+                Vector3 dir = skeletonParent != null
+                    ? skeletonParent.TransformDirection(Vector3.left)
+                    : Vector3.left;
                 Ray ray = new Ray(nose.position, dir.normalized);
                 if (Physics.Raycast(ray, out RaycastHit hit, rayLength) && hit.collider == screenCollider)
                 {
                     noseHitList.Add(hit.textureCoord);
                     Debug.DrawRay(ray.origin, ray.direction * hit.distance, Color.yellow, 0.1f);
+                    //Debug.Log($"繪製鼻子射線在位置{ray.origin}");
                 }
                 else
                 {
                     Debug.DrawRay(ray.origin, ray.direction * rayLength, Color.red, 0.1f);
+                    //Debug.Log($"繪製鼻子射線在位置{ray.origin}");
                 }
             }
             // 【新增】確保每個人都有獨立 smoother
@@ -182,15 +204,21 @@ public class SkeletonDataProcessor : MonoBehaviour
 
         PruneMissingPersons(seen);
 
+        if(noseHitList.Count > 0)
+        {
+            OnNoseHitProcessed?.Invoke(noseHitList);
+        }
+
         if (handHitList.Count > 0)
         {
-            handHitList.Sort((a, b) => a.x.CompareTo(b.x));
-            //simpleHoleController.UpdateHoleCenters(hitList);
+            //handHitList.Sort((a, b) => a.x.CompareTo(b.x));
 
-            StringBuilder sb = new StringBuilder("[HitList Sorted] ");
-            foreach (var uv in handHitList)
-                sb.Append($"({uv.x:F3},{uv.y:F3}) ");
-            Debug.Log(sb.ToString());
+            OnHandHitProcessed.Invoke(handHitList);
+
+            //StringBuilder sb = new StringBuilder("[HitList Sorted] ");
+            //foreach (var uv in handHitList)
+            //    sb.Append($"({uv.x:F3},{uv.y:F3}) ");
+            //Debug.Log(sb.ToString());
         }
     }
 
@@ -242,10 +270,14 @@ public class SkeletonDataProcessor : MonoBehaviour
         int hitCount = 0;
         RaycastHit hit;
 
-        // [Modified] 射線方向：固定朝前（Z+）
+        //// [Modified] 射線方向：固定朝前（Z+）
+        //Vector3 dir = skeletonParent != null
+        //    ? skeletonParent.TransformDirection(Vector3.forward)
+        //    : Vector3.forward;
+
         Vector3 dir = skeletonParent != null
-            ? skeletonParent.TransformDirection(Vector3.forward)
-            : Vector3.forward;
+            ? skeletonParent.TransformDirection(Vector3.left)
+            : Vector3.left;
 
         Ray ray = new Ray(wrist.position, dir.normalized);
 

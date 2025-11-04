@@ -102,3 +102,4 @@ MonoBehaviour:
   crossBaseIntensity: 0.05
   glowSineFrequency: 0.2
   crossSineFrequency: 0.25
+  lifetime: 10

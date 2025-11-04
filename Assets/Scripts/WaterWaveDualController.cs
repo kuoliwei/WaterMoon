@@ -13,13 +13,13 @@ public class WaterWaveDualController : MonoBehaviour
     public float[] waveFrequenciesX = new float[8];
     public float[] waveSpeedsX = new float[8];
     public float[] waveStrengthsX = new float[8];
-    public float[] ampVarSpeedsX = new float[8]; // 震幅變化速度（X）
+    public float[] ampVarSpeedsX = new float[8];
 
     [Header("Y Direction Waves")]
     public float[] waveFrequenciesY = new float[8];
     public float[] waveSpeedsY = new float[8];
     public float[] waveStrengthsY = new float[8];
-    public float[] ampVarSpeedsY = new float[8]; // 震幅變化速度（Y）
+    public float[] ampVarSpeedsY = new float[8];
 
     [Header("Randomization Ranges (X)")]
     public float waveFrequenciesX_Min;
@@ -42,8 +42,8 @@ public class WaterWaveDualController : MonoBehaviour
     public float ampVarSpeedsY_Max;
 
     [Header("Amplitude Pulse Control")]
-    public bool enablePulse = true; // 是否啟用正弦脈動
-    public float pulseMultiplier = 1.0f; // 可調整脈動強度
+    public bool enablePulse = true;
+    public float pulseMultiplier = 1.0f;
 
     private static readonly int WaveCountXID = Shader.PropertyToID("_WaveCountX");
     private static readonly int WaveCountYID = Shader.PropertyToID("_WaveCountY");
@@ -54,13 +54,25 @@ public class WaterWaveDualController : MonoBehaviour
     private static readonly int WaveSpeedsYID = Shader.PropertyToID("_WaveSpeedsY");
     private static readonly int WaveStrengthsYID = Shader.PropertyToID("_WaveStrengthsY");
 
-
     private float[] currentWaveStrengthsX = new float[8];
     private float[] currentWaveStrengthsY = new float[8];
+
+    // -----------------------------------------------------------
+    // Reflection Scale 控制邏輯
+    // -----------------------------------------------------------
+    [Header("Reflection Scale Control")]
+    [SerializeField] private float reflectionScaleX = 0.8f;
+    [SerializeField] private float reflectionScaleY = 1.2f;
+    [SerializeField] private float increaseStepX = 0.2f;
+    [SerializeField] private float increaseStepY = 0.1f;
+    [SerializeField] private float maxScaleX = 6.5f;
+    [SerializeField] private float maxScaleY = 3.0f;
+
+    private static readonly int ReflectionScaleXID = Shader.PropertyToID("_ReflectionScaleX");
+    private static readonly int ReflectionScaleYID = Shader.PropertyToID("_ReflectionScaleY");
+
     void Start()
     {
-        //if (waterMat == null)
-        //    waterMat = GetComponent<Renderer>()?.sharedMaterial;
         RandomizeWaves();
     }
 
@@ -68,13 +80,10 @@ public class WaterWaveDualController : MonoBehaviour
     {
         if (waterMat == null) return;
 
-        // 讓震幅隨時間脈動
         if (enablePulse)
-        {
             UpdateWaveAmplitudePulse();
-        }
 
-        // 套用到 Shader
+        // 更新波參數
         waterMat.SetInt(WaveCountXID, waveCountX);
         waterMat.SetFloatArray(WaveFrequenciesXID, waveFrequenciesX);
         waterMat.SetFloatArray(WaveSpeedsXID, waveSpeedsX);
@@ -84,11 +93,12 @@ public class WaterWaveDualController : MonoBehaviour
         waterMat.SetFloatArray(WaveFrequenciesYID, waveFrequenciesY);
         waterMat.SetFloatArray(WaveSpeedsYID, waveSpeedsY);
         waterMat.SetFloatArray(WaveStrengthsYID, currentWaveStrengthsY);
+
+        // 確保反射比例持續同步至 shader
+        waterMat.SetFloat(ReflectionScaleXID, reflectionScaleX);
+        waterMat.SetFloat(ReflectionScaleYID, reflectionScaleY);
     }
 
-    // -----------------------------------------------------------
-    // 隨機生成波參數
-    // -----------------------------------------------------------
     [ContextMenu("Randomize Wave Parameters")]
     public void RandomizeWaves()
     {
@@ -100,27 +110,20 @@ public class WaterWaveDualController : MonoBehaviour
             ampVarSpeedsX[i] = Random.Range(ampVarSpeedsX_Min, ampVarSpeedsX_Max);
         }
 
-        for (int i = 0; i < waveCountY; i++)
+        for (int j = 0; j < waveCountY; j++)
         {
-            waveFrequenciesY[i] = Random.Range(waveFrequenciesY_Min, waveFrequenciesY_Max);
-            waveSpeedsY[i] = Random.Range(waveSpeedsY_Min, waveSpeedsY_Max);
-            waveStrengthsY[i] = Random.Range(waveStrengthsY_Min, waveStrengthsY_Max);
-            ampVarSpeedsY[i] = Random.Range(ampVarSpeedsY_Min, ampVarSpeedsY_Max);
+            waveFrequenciesY[j] = Random.Range(waveFrequenciesY_Min, waveFrequenciesY_Max);
+            waveSpeedsY[j] = Random.Range(waveSpeedsY_Min, waveSpeedsY_Max);
+            waveStrengthsY[j] = Random.Range(waveStrengthsY_Min, waveStrengthsY_Max);
+            ampVarSpeedsY[j] = Random.Range(ampVarSpeedsY_Min, ampVarSpeedsY_Max);
         }
-
-        Debug.Log($"[WaterWaveDualController] Randomized {waveCountX} X-waves & {waveCountY} Y-waves");
     }
 
-    // -----------------------------------------------------------
-    // 震幅脈動更新邏輯
-    // -----------------------------------------------------------
     private void UpdateWaveAmplitudePulse()
     {
         for (int i = 0; i < waveCountX; i++)
         {
-            // 基於時間的正弦波
             float sinValue = Mathf.Sin(2 * Mathf.PI * Time.time * ampVarSpeedsX[i]);
-            // 讓值永遠為正（或保留原本正負可選）
             currentWaveStrengthsX[i] = Mathf.Abs(sinValue) * pulseMultiplier * waveStrengthsX[i];
         }
 
@@ -129,5 +132,22 @@ public class WaterWaveDualController : MonoBehaviour
             float sinValue = Mathf.Sin(2 * Mathf.PI * Time.time * ampVarSpeedsY[j]);
             currentWaveStrengthsY[j] = Mathf.Abs(sinValue) * pulseMultiplier * waveStrengthsY[j];
         }
+    }
+
+    /// <summary>
+    /// 每次手部擊中星星時呼叫，使 ReflectionScaleX / Y 緩步增加。
+    /// </summary>
+    public void IncreaseReflectionScale()
+    {
+        reflectionScaleX = Mathf.Min(reflectionScaleX + increaseStepX, maxScaleX);
+        reflectionScaleY = Mathf.Min(reflectionScaleY + increaseStepY, maxScaleY);
+
+        if (waterMat != null)
+        {
+            waterMat.SetFloat(ReflectionScaleXID, reflectionScaleX);
+            waterMat.SetFloat(ReflectionScaleYID, reflectionScaleY);
+        }
+
+        Debug.Log($"[WaterWaveDualController] Reflection Scale Updated → X={reflectionScaleX:F2}, Y={reflectionScaleY:F2}");
     }
 }

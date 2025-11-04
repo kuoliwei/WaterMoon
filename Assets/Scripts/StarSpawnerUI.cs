@@ -1,71 +1,86 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class StarSpawnerUI : MonoBehaviour
 {
-    [SerializeField] private RectTransform canvasRect;   // Canvas RectTransform
-    [SerializeField] private RectTransform parentRect;   // 星星要生成在哪個 UI 範圍（通常就是 Canvas）
-    [SerializeField] private GameObject starPrefab;      // 星星 prefab（Image + StarController）
+    [SerializeField] private RectTransform canvasRect;
+    [SerializeField] private RectTransform parentRect;
+    [SerializeField] private GameObject starPrefab;
 
-    // 測試用參數，可在 Inspector 調整
-    [SerializeField] private Vector2 screenPos = new Vector2(960, 540);
-    [SerializeField] private Color baseColor = Color.white;
-    [SerializeField] private Color crossColor = Color.white;
-    [SerializeField] private float scale = 1f;
+    [Header("Canvas Settings")]
+    [SerializeField] private Canvas targetCanvas;
+    [SerializeField] private Camera uiCamera;
 
-    private void Update()
+    [System.Serializable]
+    public class StarData
     {
-        // 測試：按 S 鍵生成一顆星星
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            SpawnStar(screenPos, baseColor, crossColor, scale);
-        }
+        public Vector2 screenPos; // Canvas 座標
+        public float scale;
     }
 
-    /// <summary>
-    /// 在指定的螢幕座標生成一顆星星（Canvas 空間）
-    /// </summary>
-    public GameObject SpawnStar(Vector2 screenPos, Color baseColor, Color crossColor, float scale)
+    private Dictionary<GameObject, StarData> activeStars = new();
+    public IReadOnlyDictionary<GameObject, StarData> ActiveStars => activeStars;
+
+    public GameObject SpawnStar(Vector2 canvasPos, Color baseColor, Color crossColor, float scale)
     {
-        if (starPrefab == null || canvasRect == null)
+        if (starPrefab == null || parentRect == null)
         {
-            Debug.LogWarning("Star prefab or canvas not assigned.");
+            Debug.LogWarning("StarSpawnerUI: prefab or parentRect not assigned.");
             return null;
         }
 
-        // 將螢幕座標轉成 Canvas local position
-        Vector2 anchoredPos;
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(
-            canvasRect,
-            screenPos,
-            canvasRect.GetComponent<Canvas>().renderMode == RenderMode.ScreenSpaceOverlay ? null : Camera.main,
-            out anchoredPos
-        );
-
-        // 生成星星
         GameObject star = Instantiate(starPrefab, parentRect);
         RectTransform starRect = star.GetComponent<RectTransform>();
-        starRect.anchoredPosition = anchoredPos;
+        starRect.anchoredPosition = canvasPos;
         starRect.localScale = new Vector3(scale, scale, 1f);
         starRect.localRotation = Quaternion.identity;
 
-        // 設定顏色（若星星 prefab 有 StarController）
-        // StarSpawnerUI.cs 內 SpawnStar(...) 的生成後段落
-
         var sc = star.GetComponent<StarController>();
         if (sc != null)
-        {
-            sc.SetColors(baseColor, crossColor); // 正確指定 shader 的 _BaseColor / _CrossColor
-        }
+            sc.SetColors(baseColor, crossColor);
 
+        activeStars.Add(star, new StarData { screenPos = canvasPos, scale = scale });
 
-        //// 若使用 Image 版本，可以直接改顏色
-        //Image img = star.GetComponent<Image>();
-        //if (img != null)
-        //{
-        //    img.color = baseColor;
-        //}
+        StarController controller = star.GetComponent<StarController>();
+        if (controller != null)
+            controller.SetSpawner(this);
 
         return star;
+    }
+
+    public void UnregisterStar(GameObject star)
+    {
+        if (activeStars.ContainsKey(star))
+            activeStars.Remove(star);
+    }
+
+    public Canvas GetTargetCanvas() => targetCanvas;
+    public Camera GetUICamera() => uiCamera;
+
+    // === UI Text 相關設定 ===
+    [Header("Hit Text Settings")]
+    [SerializeField] private GameObject textPrefab;   // 指向你的 UI Text 預置物
+    [SerializeField] private float textLifetime = 1.5f; // 文字存在時間
+
+    /// <summary>
+    /// 生成擊中星星後出現的 UI 文字（位置與星星重疊）
+    /// </summary>
+    public void SpawnHitText(Vector2 canvasPos, string message)
+    {
+        if (textPrefab == null || parentRect == null)
+            return;
+
+        GameObject textObj = Instantiate(textPrefab, parentRect);
+        RectTransform textRect = textObj.GetComponent<RectTransform>();
+        textRect.anchoredPosition = canvasPos; // 完全重疊位置
+        textRect.localScale = Vector3.one;
+        textRect.localRotation = Quaternion.identity;
+
+        var text = textObj.GetComponent<Text>();
+        //if (text != null)
+        //    text.text = message;
+
+        Destroy(textObj, textLifetime);
     }
 }

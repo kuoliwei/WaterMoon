@@ -39,6 +39,14 @@ public class StarController : MonoBehaviour
     public float glowSineFrequency = 1f;
     public float crossSineFrequency = 2f;
 
+    [Header("Lifetime Settings")]
+    [SerializeField] private float lifetime = 3f; // 星星存活時間（秒）
+
+    private StarSpawnerUI spawner;
+    public void SetSpawner(StarSpawnerUI spawnerRef)
+    {
+        spawner = spawnerRef;
+    }
     void Start()
     {
         // 唯一改動：從 Graphic 而非 Renderer 取得材質
@@ -49,6 +57,9 @@ public class StarController : MonoBehaviour
         // 初始化 shader 顏色
         mat.SetColor(BaseColorID, glowColor);
         mat.SetColor(CrossColorID, crossColor);
+
+        // 自動銷毀星星
+        Destroy(gameObject, lifetime);
     }
 
     void Update()
@@ -134,5 +145,10 @@ public class StarController : MonoBehaviour
         sineValue = (sineValue + 1f) * 0.5f;
         crossIntensity = crossBaseIntensity + sineValue * crossSineAmplitude;
         mat.SetFloat(CrossIntensityID, crossIntensity);
+    }
+    private void OnDestroy()
+    {
+        if (spawner != null)
+            spawner.UnregisterStar(gameObject);
     }
 }
