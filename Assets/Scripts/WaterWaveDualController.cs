@@ -63,10 +63,14 @@ public class WaterWaveDualController : MonoBehaviour
     [Header("Reflection Scale Control")]
     [SerializeField] private float reflectionScaleX = 0.8f;
     [SerializeField] private float reflectionScaleY = 1.2f;
-    [SerializeField] private float increaseStepX = 0.2f;
-    [SerializeField] private float increaseStepY = 0.1f;
     [SerializeField] private float maxScaleX = 6.5f;
     [SerializeField] private float maxScaleY = 3.0f;
+
+    [Header("Touch Settings")]
+    [Tooltip("完成體驗所需觸碰的星星數量")]
+    [SerializeField] private int totalTouchesRequired = 20;
+
+    private int currentTouchCount = 0;
 
     private static readonly int ReflectionScaleXID = Shader.PropertyToID("_ReflectionScaleX");
     private static readonly int ReflectionScaleYID = Shader.PropertyToID("_ReflectionScaleY");
@@ -74,6 +78,7 @@ public class WaterWaveDualController : MonoBehaviour
     void Start()
     {
         RandomizeWaves();
+        UpdateReflectionScale();
     }
 
     void Update()
@@ -93,12 +98,11 @@ public class WaterWaveDualController : MonoBehaviour
         waterMat.SetFloatArray(WaveFrequenciesYID, waveFrequenciesY);
         waterMat.SetFloatArray(WaveSpeedsYID, waveSpeedsY);
         waterMat.SetFloatArray(WaveStrengthsYID, currentWaveStrengthsY);
-
-        // 確保反射比例持續同步至 shader
-        waterMat.SetFloat(ReflectionScaleXID, reflectionScaleX);
-        waterMat.SetFloat(ReflectionScaleYID, reflectionScaleY);
     }
-
+    public bool IsExperienceCompleted()
+    {
+        return currentTouchCount >= totalTouchesRequired;
+    }
     [ContextMenu("Randomize Wave Parameters")]
     public void RandomizeWaves()
     {
@@ -135,12 +139,41 @@ public class WaterWaveDualController : MonoBehaviour
     }
 
     /// <summary>
-    /// 每次手部擊中星星時呼叫，使 ReflectionScaleX / Y 緩步增加。
+    /// 每次手部擊中星星時呼叫，使 ReflectionScaleX / Y 按比例成長。
     /// </summary>
     public void IncreaseReflectionScale()
     {
-        reflectionScaleX = Mathf.Min(reflectionScaleX + increaseStepX, maxScaleX);
-        reflectionScaleY = Mathf.Min(reflectionScaleY + increaseStepY, maxScaleY);
+        if (currentTouchCount >= totalTouchesRequired)
+            return;
+
+        currentTouchCount++;
+
+        float t = Mathf.Clamp01((float)currentTouchCount / totalTouchesRequired);
+        reflectionScaleX = Mathf.Lerp(0.8f, maxScaleX, t);
+        reflectionScaleY = Mathf.Lerp(1.2f, maxScaleY, t);
+
+        UpdateReflectionScale();
+
+        Debug.Log($"[WaterWaveDualController] Touch {currentTouchCount}/{totalTouchesRequired} → X={reflectionScaleX:F2}, Y={reflectionScaleY:F2}");
+    }
+
+    private void UpdateReflectionScale()
+    {
+        if (waterMat != null)
+        {
+            waterMat.SetFloat(ReflectionScaleXID, reflectionScaleX);
+            waterMat.SetFloat(ReflectionScaleYID, reflectionScaleY);
+        }
+    }
+
+    /// <summary>
+    /// 將反射比例回復到初始狀態。
+    /// </summary>
+    public void ResetToInitial()
+    {
+        reflectionScaleX = 0.8f;
+        reflectionScaleY = 1.2f;
+        currentTouchCount = 0;
 
         if (waterMat != null)
         {
@@ -148,6 +181,7 @@ public class WaterWaveDualController : MonoBehaviour
             waterMat.SetFloat(ReflectionScaleYID, reflectionScaleY);
         }
 
-        Debug.Log($"[WaterWaveDualController] Reflection Scale Updated → X={reflectionScaleX:F2}, Y={reflectionScaleY:F2}");
+        Debug.Log("[WaterWaveDualController] 已重設為初始值");
     }
+
 }

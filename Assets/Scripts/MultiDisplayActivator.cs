@@ -14,7 +14,6 @@ public class MultiDisplayActivator : MonoBehaviour
             Display.displays[i].Activate();
             Debug.Log($"已啟用 Display {i}");
         }
-        displayLength = Display.displays.Length;
         Debug.Log($"多顯示器啟動完成，共偵測到 {Display.displays.Length} 個顯示器。");
 #endif
     }

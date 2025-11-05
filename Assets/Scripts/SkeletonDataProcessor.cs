@@ -130,8 +130,8 @@ public class SkeletonDataProcessor : MonoBehaviour
                 //    : Vector3.forward;
 
                 Vector3 dir = skeletonParent != null
-                    ? skeletonParent.TransformDirection(Vector3.left)
-                    : Vector3.left;
+                    ? skeletonParent.TransformDirection(Vector3.back)
+                    : Vector3.back;
                 Ray ray = new Ray(nose.position, dir.normalized);
                 if (Physics.Raycast(ray, out RaycastHit hit, rayLength) && hit.collider == screenCollider)
                 {
@@ -276,8 +276,8 @@ public class SkeletonDataProcessor : MonoBehaviour
         //    : Vector3.forward;
 
         Vector3 dir = skeletonParent != null
-            ? skeletonParent.TransformDirection(Vector3.left)
-            : Vector3.left;
+            ? skeletonParent.TransformDirection(Vector3.back)
+            : Vector3.back;
 
         Ray ray = new Ray(wrist.position, dir.normalized);
 

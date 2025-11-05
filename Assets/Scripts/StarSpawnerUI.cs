@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class StarSpawnerUI : MonoBehaviour
 {
@@ -11,6 +12,9 @@ public class StarSpawnerUI : MonoBehaviour
     [Header("Canvas Settings")]
     [SerializeField] private Canvas targetCanvas;
     [SerializeField] private Camera uiCamera;
+
+    [Header("Verses")]
+    [SerializeField] private string[] verses;
 
     [System.Serializable]
     public class StarData
@@ -65,22 +69,29 @@ public class StarSpawnerUI : MonoBehaviour
 
     /// <summary>
     /// 生成擊中星星後出現的 UI 文字（位置與星星重疊）
+    /// 隨機從 verses 中選一行詩句顯示。
     /// </summary>
-    public void SpawnHitText(Vector2 canvasPos, string message)
+    public void SpawnHitText(Vector2 canvasPos)
     {
         if (textPrefab == null || parentRect == null)
             return;
 
         GameObject textObj = Instantiate(textPrefab, parentRect);
         RectTransform textRect = textObj.GetComponent<RectTransform>();
-        textRect.anchoredPosition = canvasPos; // 完全重疊位置
+        textRect.anchoredPosition = canvasPos;
         textRect.localScale = Vector3.one;
         textRect.localRotation = Quaternion.identity;
 
-        var text = textObj.GetComponent<Text>();
-        //if (text != null)
-        //    text.text = message;
+        // 從 verses 隨機選一句
+        string verseToShow = "";
+        if (verses != null && verses.Length > 0)
+            verseToShow = verses[Random.Range(0, verses.Length)];
+
+        var text = textObj.GetComponent<TMP_Text>();
+        if (text != null)
+            text.text = verseToShow;
 
         Destroy(textObj, textLifetime);
     }
+
 }

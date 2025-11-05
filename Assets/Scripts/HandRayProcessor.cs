@@ -14,6 +14,8 @@ public class HandRayProcessor : MonoBehaviour
     [Header("Debug")]
     [SerializeField] private bool enableDebug = true;
 
+    [SerializeField] private ExperienceFlowController flowController;
+
     private bool isHandActive = false;
     private bool lastState = false;
     private float lastReceivedTime = -999f;
@@ -88,12 +90,17 @@ public class HandRayProcessor : MonoBehaviour
 
                     if (starObj != null)
                     {
-                        starSpawnerUI.SpawnHitText(data.screenPos, "★");
+                        starSpawnerUI.SpawnHitText(data.screenPos);
                         Destroy(starObj);
 
                         // 通知水波控制器增加反射比例
                         if (waterWaveController != null)
+                        {
                             waterWaveController.IncreaseReflectionScale();
+
+                            if (waterWaveController.IsExperienceCompleted())
+                                flowController.OnExperienceCompleted();
+                        }
                     }
                 }
             }

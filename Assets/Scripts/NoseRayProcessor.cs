@@ -5,9 +5,12 @@ public class NoseRayProcessor : MonoBehaviour
 {
     [Header("狀態設定")]
     [SerializeField] private float loseTrackThreshold = 0.2f;
+    [SerializeField] private float idleResetTime = 120f; // 超過這秒數無人偵測就重置
 
     [Header("Star spawner")]
     [SerializeField] private StarSpawnerUI starSpawnerUI;
+    [SerializeField] private WaterWaveDualController waterWaveController;
+    [SerializeField] private ExperienceFlowController flowController; // 引用流程控制器
 
     [Header("Range")]
     [SerializeField] private float range = 150f;
@@ -31,7 +34,7 @@ public class NoseRayProcessor : MonoBehaviour
     private float lastReceivedTime = -999f;
     private List<Vector2> latestNoseHits = new();
     private float spawnTimer = 0f;
-
+    private float lastActiveTime = -999f;    // 記錄最後一次有效體驗的時間
     private Canvas targetCanvas;
     private Camera uiCamera;
 
@@ -42,6 +45,7 @@ public class NoseRayProcessor : MonoBehaviour
             targetCanvas = starSpawnerUI.GetTargetCanvas();
             uiCamera = starSpawnerUI.GetUICamera();
         }
+        lastActiveTime = Time.time;
     }
 
     public void OnReceiveNoseHits(List<Vector2> noseHitList)
@@ -51,6 +55,7 @@ public class NoseRayProcessor : MonoBehaviour
             lastReceivedTime = Time.time;
             latestNoseHits.Clear();
             latestNoseHits.AddRange(noseHitList);
+            lastActiveTime = Time.time; // 有效資料時更新活動時間
         }
     }
 
@@ -64,6 +69,17 @@ public class NoseRayProcessor : MonoBehaviour
             if (enableDebug)
                 Debug.Log(isInsideRange ? "進入體驗範圍" : "離開體驗範圍");
             lastState = isInsideRange;
+        }
+
+        // 超過 idleResetTime 沒人 → 自動回到初始狀態
+        if (Time.time - lastActiveTime > idleResetTime)
+        {
+            if (enableDebug)
+                Debug.Log($"超過 {idleResetTime} 秒無人體驗，自動重置");
+            if (flowController != null)
+                flowController.InitializeExperience();
+            lastActiveTime = Time.time; // 重置計時避免重複觸發
+            return;
         }
 
         if (isInsideRange && latestNoseHits.Count > 0)
@@ -81,6 +97,10 @@ public class NoseRayProcessor : MonoBehaviour
     private void GenerateStars()
     {
         if (starSpawnerUI == null || targetCanvas == null)
+            return;
+
+        // 若體驗已完成，就不再生成星星
+        if (waterWaveController != null && waterWaveController.IsExperienceCompleted())
             return;
 
         foreach (var uv in latestNoseHits)
